@@ -4,15 +4,15 @@ import { useFormik } from "formik";
 //errors object that gets returned must have keys that match the values/initialValues.
 const validate = (values) => {
   const errors = {};
-  if (!values.firstname) {
+  if (!values.firstName) {
     errors.firstName = "Required";
-  } else if (values.firstName.length() > 15) {
+  } else if (values.firstName.length > 15) {
     errors.firstName = "Must be 15 characters or less";
   }
 
   if (!values.lastName) {
-    errors.lastname = "Required";
-  } else if (values.lastName.length() > 20) {
+    errors.lastName = "Required";
+  } else if (values.lastName.length > 20) {
     errors.lastName = "Must be 20 characters or less";
   }
 
@@ -24,42 +24,48 @@ const validate = (values) => {
 
   return errors;
 };
-
+    
+        
 const SignUpForm = () => {
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-    },
-    //validate will be called when values change or fields are blurred
-    validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
+    const formik = useFormik({
+        initialValues: {
+          firstName: '',
+          lastName: '',
+          email: '',
+        },
+        //validate will be called for each change event, blur event, and before submission
+        validate,
+        //onSubmit will only be called if validate returns {}
+        onSubmit: values => {
+          alert(JSON.stringify(values, null, 2));
+        },
+      });
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <label hmlFor="firstName">First Name</label>
+      <label htmlFor="firstName">First Name</label>
       <input
-        type="text"
-        name="firstName"
         id="firstName"
+        name="firstName"
+        type="text"
+        //formik finds the value that matches this name and updates its state
         onChange={formik.handleChange}
+        //sets boolean touched value for each field based on name
+        onBlur={formik.handleBlur}
         value={formik.values.firstName}
       />
-      {formik.errors.firstName ? <div>{formik.errors.firstName}</div> : null}
+      {formik.touched.firstName && formik.errors.firstName ? <div>{formik.errors.firstName}</div> : null}
 
       <label htmlFor="lastName">Last Name</label>
       <input
-        type="text"
-        name="lastName"
         id="lastName"
-        onChange={formik.onChange}
+        name="lastName"
+        type="text"
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         value={formik.values.lastName}
       />
-      {formik.errors.lastName ? <div>{formik.errors.lastName}</div> : null}
+      {formik.touched.lastName && formik.errors.lastName ? <div>{formik.errors.lastName}</div> : null}
 
       <label htmlFor="email">Email Address</label>
       <input
@@ -67,9 +73,11 @@ const SignUpForm = () => {
         name="email"
         type="email"
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         value={formik.values.email}
       />
-      {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+      {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null}
+
       <button type="submit">Submit</button>
     </form>
   );
