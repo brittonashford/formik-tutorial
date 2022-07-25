@@ -57,38 +57,38 @@ const SignUpForm = () => {
     <form onSubmit={formik.handleSubmit}>
       <label htmlFor="firstName">First Name</label>
       <input
-        id="firstName"
-        name="firstName"
         type="text"
-        //formik finds the value that matches this name and updates its state
-        onChange={formik.handleChange}
-        //sets boolean touched value for each field based on name
-        onBlur={formik.handleBlur}
-        value={formik.values.firstName}
+        id="firstName"
+        //spreads value, checked, onChange, and onBlur
+        {...formik.getFieldProps('firstName')}
+
+        // //REPLACED BY formik.getFieldProps
+        // name="firstName"    
+        // //formik finds the value that matches this name and updates its state
+        // onChange={formik.handleChange}
+        // //sets boolean touched value for each field based on name
+        // onBlur={formik.handleBlur}
+        // value={formik.values.firstName}
+
+
       />
-      {formik.touched.firstName && formik.errors.firstName ? <div>{formik.errors.firstName}</div> : null}
+      {formik.touched.firstName && formik.errors.firstName ? (<div>{formik.errors.firstName}</div>) : null}
 
       <label htmlFor="lastName">Last Name</label>
       <input
-        id="lastName"
-        name="lastName"
         type="text"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.lastName}
+        id="lastName"
+        {...formik.getFieldProps('lastName')}
       />
-      {formik.touched.lastName && formik.errors.lastName ? <div>{formik.errors.lastName}</div> : null}
+      {formik.touched.lastName && formik.errors.lastName ? (<div>{formik.errors.lastName}</div>) : null}
 
       <label htmlFor="email">Email Address</label>
       <input
-        id="email"
-        name="email"
         type="email"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.email}
+        id="email"
+        {...formik.getFieldProps('email')}       
       />
-      {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null}
+      {formik.touched.email && formik.errors.email ? (<div>{formik.errors.email}</div>) : null}
 
       <button type="submit">Submit</button>
     </form>
