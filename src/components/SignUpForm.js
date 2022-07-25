@@ -1,44 +1,13 @@
-import { useFormik } from "formik";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
-
-//NOW USING YUP validation function to pass into useFormik().
-//errors object that gets returned must have keys that match the values/initialValues.
-// const validate = (values) => {
-//   const errors = {};
-//   if (!values.firstName) {
-//     errors.firstName = "Required";
-//   } else if (values.firstName.length > 15) {
-//     errors.firstName = "Must be 15 characters or less";
-//   }
-
-//   if (!values.lastName) {
-//     errors.lastName = "Required";
-//   } else if (values.lastName.length > 20) {
-//     errors.lastName = "Must be 20 characters or less";
-//   }
-
-//   if (!values.email) {
-//     errors.email = "Required";
-//   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-//     errors.email = "Invalid email address";
-//   }
-
-//   return errors;
-// };
-    
-        
+   
 const SignUpForm = () => {
-    const formik = useFormik({
-        initialValues: {
-          firstName: '',
-          lastName: '',
-          email: '',
-        },
-        //validate will be called for each change event, blur event, and before submission
-        //NOW USING YUP
-        //validate,
 
-        validationSchema: Yup.object({
+  return (
+    //Wrapped in Formik context provider
+    <Formik
+        initialValues={{ firstName: '', lastName: '', email: '' }}
+        validationSchema={Yup.object({
             firstName: Yup.string()
                 .max(15, 'Must be 15 characters or less')
                 .required('Required'),
@@ -46,52 +15,32 @@ const SignUpForm = () => {
                 .max(20, 'Must be 20 characters or less')
                 .required('Required'),
             email: Yup.string().email('Invalid email address').required('Required'),
-        }),
-        //onSubmit will only be called if validate returns {}
-        onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
-        },
-      });
+        })}
 
-  return (
-    <form onSubmit={formik.handleSubmit}>
-      <label htmlFor="firstName">First Name</label>
-      <input
-        type="text"
-        id="firstName"
-        //spreads value, checked, onChange, and onBlur
-        {...formik.getFieldProps('firstName')}
+        onSubmit={( values, { setSubmitting }) => {
+            setTimeout(() => {
+                alert(JSON.stringify(values, null, 2));
+                setSubmitting(false);
+            }, 400);
+         
+        }}
+        >
+            <Form>
+                <label htmlFor="firstName">First Name</label>
+                <Field type="text" name="firstName" />
+                <ErrorMessage name="firstName" />
 
-        // //REPLACED BY formik.getFieldProps
-        // name="firstName"    
-        // //formik finds the value that matches this name and updates its state
-        // onChange={formik.handleChange}
-        // //sets boolean touched value for each field based on name
-        // onBlur={formik.handleBlur}
-        // value={formik.values.firstName}
+                <label htmlFor="lastName">Last Name</label>
+                <Field type="text" name="lastName" />
+                <ErrorMessage name="lastName" />
 
+                <label htmlFor="email">Email Address</label>
+                <input name="email" type="email" />
+                <ErrorMessage name="email" />
 
-      />
-      {formik.touched.firstName && formik.errors.firstName ? (<div>{formik.errors.firstName}</div>) : null}
-
-      <label htmlFor="lastName">Last Name</label>
-      <input
-        type="text"
-        id="lastName"
-        {...formik.getFieldProps('lastName')}
-      />
-      {formik.touched.lastName && formik.errors.lastName ? (<div>{formik.errors.lastName}</div>) : null}
-
-      <label htmlFor="email">Email Address</label>
-      <input
-        type="email"
-        id="email"
-        {...formik.getFieldProps('email')}       
-      />
-      {formik.touched.email && formik.errors.email ? (<div>{formik.errors.email}</div>) : null}
-
-      <button type="submit">Submit</button>
-    </form>
+                <button type="submit">Submit</button>
+            </Form>
+        </Formik>
   );
 };
 
